@@ -1,358 +1,86 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>YouTube.com Clone</title>
+import pygame
+import random
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+# Initialize Pygame
+pygame.init()
 
-    <link rel="stylesheet" href="styles/general.css">
-    <link rel="stylesheet" href="styles/header.css">
-    <link rel="stylesheet" href="styles/video.css">
-    <link rel="stylesheet" href="styles/sidebar.css">
-  </head>
-  <body>
-    <header class="header">
-      <div class="left-section">
-        <img class="hamburger-menu" src="icons/hamburger-menu.svg">
-        <img class="youtube-logo" src="icons/youtube-logo.svg">
-      </div>
-      <div class="middle-section">
-        <input class="search-bar" type="text" placeholder="Search">
-        <button class="search-button">
-          <img class="search-icon" src="icons/search.svg">
-          <div class="tooltip">Search</div>
-        </button>
-        <!-- Put position absolute inside position relative -->
-        <button class="voice-search-button">
-          <img class="voice-search-icon" src="icons/voice-search-icon.svg">
-          <div class="tooltip">Search with your voice</div>
-        </button>
-      </div>
-      <div class="right-section">
-        <div class="upload-icon-container">
-          <img class="upload-icon" src="icons/upload.svg">
-          <div class="tooltip">Create</div>
-        </div>
-        <div class="youtube-apps-icon-container">
-          <img class="youtube-apps-icon" src="icons/youtube-apps.svg">
-          <div class="tooltip">YouTube Apps</div>
-        </div>
-        <div class="notifications-icon-container">
-          <img class="notifications-icon" src="icons/notifications.svg">
-          <div class="notifications-count">3</div>
-          <div class="tooltip">Notifications</div>
-        </div>
-        <img class="current-user-picture" src="channel-pictures/my-channel.jpeg">
-      </div>
-    </header>
+# Constants
+WIDTH, HEIGHT = 800, 600
+BALL_RADIUS = 10
+PADDLE_WIDTH, PADDLE_HEIGHT = 10, 100
+PADDLE_SPEED = 10
+BALL_SPEED_X = 7
+BALL_SPEED_Y = 7
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 
-    <nav class="sidebar">
-      <div class="sidebar-link">
-        <img src="icons/home.svg">
-        <div>Home</div>
-      </div>
-      <div class="sidebar-link">
-        <img src="icons/explore.svg">
-        <div>Explore</div>
-      </div>
-      <div class="sidebar-link">
-        <img src="icons/subscriptions.svg">
-        <div>Subscriptions</div>
-      </div>
-      <div class="sidebar-link">
-        <img src="icons/originals.svg">
-        <div>Originals</div>
-      </div>
-      <div class="sidebar-link">
-        <img src="icons/youtube-music.svg">
-        <div>YouTube Music</div>
-      </div>
-      <div class="sidebar-link">
-        <img src="icons/library.svg">
-        <div>Library</div>
-      </div>
-    </nav>
+# Create the window
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Ping Pong")
 
-    <main>
-      <section class="video-grid">
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-1.webp">
-            <div class="video-time">14:20</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-1.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                Talking Tech and AI with Google CEO Sundar Pichai!
-              </p>
-              <p class="video-author">
-                Marques Brownlee
-              </p>
-              <p class="video-stats">
-                3.4M views &#183; 6 months ago
-              </p>
-            </div>
-          </div>
-        </div>
+# Define paddles and ball
+player1 = pygame.Rect(50, HEIGHT // 2 - PADDLE_HEIGHT // 2, PADDLE_WIDTH, PADDLE_HEIGHT)
+player2 = pygame.Rect(WIDTH - 50 - PADDLE_WIDTH, HEIGHT // 2 - PADDLE_HEIGHT // 2, PADDLE_WIDTH, PADDLE_HEIGHT)
+ball = pygame.Rect(WIDTH // 2 - BALL_RADIUS // 2, HEIGHT // 2 - BALL_RADIUS // 2, BALL_RADIUS, BALL_RADIUS)
+ball_speed_x = BALL_SPEED_X * random.choice((1, -1))
+ball_speed_y = BALL_SPEED_Y * random.choice((1, -1))
 
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-2.webp">
-            <div class="video-time">8:22</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-2.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                Try Not To Laugh Challenge #9
-              </p>
-              <p class="video-author">
-                Markiplier
-              </p>
-              <p class="video-stats">
-                19M views &#183; 4 years ago
-              </p>
-            </div>
-          </div>
-        </div>
+# Game loop
+running = True
+while running:
+    # Event handling
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    
+    # Move paddles
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w] and player1.top > 0:
+        player1.y -= PADDLE_SPEED
+    if keys[pygame.K_s] and player1.bottom < HEIGHT:
+        player1.y += PADDLE_SPEED
+    if keys[pygame.K_UP] and player2.top > 0:
+        player2.y -= PADDLE_SPEED
+    if keys[pygame.K_DOWN] and player2.bottom < HEIGHT:
+        player2.y += PADDLE_SPEED
 
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-3.webp">
-            <div class="video-time">9:13</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-3.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                Crazy Tik Toks Taken Moments Before DISASTER
-              </p>
-              <p class="video-author">
-                SSSniperWolf
-              </p>
-              <p class="video-stats">
-                12M views &#183; 1 year ago
-              </p>
-            </div>
-          </div>
-        </div>
+    # Move the ball
+    ball.x += ball_speed_x
+    ball.y += ball_speed_y
 
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-4.webp">
-            <div class="video-time">22:09</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-4.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                The Simplest Math Problem No One Can Solve - Collatz Conjecture
-              </p>
-              <p class="video-author">
-                Veritasium
-              </p>
-              <p class="video-stats">
-                18M views &#183; 4 months ago
-              </p>
-            </div>
-          </div>
-        </div>
+    # Ball collision with walls
+    if ball.top <= 0 or ball.bottom >= HEIGHT:
+        ball_speed_y *= -1
+    if ball.left <= 0:
+        ball_speed_x *= -1
+        ball.x, ball.y = WIDTH // 2, HEIGHT // 2
+        ball_speed_x = BALL_SPEED_X * random.choice((1, -1))
+        ball_speed_y = BALL_SPEED_Y * random.choice((1, -1))
+    if ball.right >= WIDTH:
+        ball_speed_x *= -1
+        ball.x, ball.y = WIDTH // 2, HEIGHT // 2
+        ball_speed_x = BALL_SPEED_X * random.choice((1, -1))
+        ball_speed_y = BALL_SPEED_Y * random.choice((1, -1))
 
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-5.webp">
-            <div class="video-time">11:17</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-5.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                Kadane's Algorithm to Maximum Sum Subarray Problem
-              </p>
-              <p class="video-author">
-                CS Dojo
-              </p>
-              <p class="video-stats">
-                519K views &#183; 5 years ago
-              </p>
-            </div>
-          </div>
-        </div>
+    # Ball collision with paddles
+    if ball.colliderect(player1) or ball.colliderect(player2):
+        ball_speed_x *= -1
 
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-6.webp">
-            <div class="video-time">19:59</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-6.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                Anything You Can Fit In The Circle I’ll Pay For
-              </p>
-              <p class="video-author">
-                MrBeast
-              </p>
-              <p class="video-stats">
-                141M views &#183; 1 year ago
-              </p>
-            </div>
-          </div>
-        </div>
+    # Clear the screen
+    screen.fill(BLACK)
+    
+    # Draw paddles and ball
+    pygame.draw.rect(screen, WHITE, player1)
+    pygame.draw.rect(screen, WHITE, player2)
+    pygame.draw.ellipse(screen, WHITE, ball)
 
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-7.webp">
-            <div class="video-time">10:13</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-7.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                Why Planes Don't Fly Over Tibet
-              </p>
-              <p class="video-author">
-                RealLifeLore
-              </p>
-              <p class="video-stats">
-                6.6M views &#183; 1 year ago
-              </p>
-            </div>
-          </div>
-        </div>
+    # Update the display
+    pygame.display.flip()
 
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-8.webp">
-            <div class="video-time">7:12</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-8.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                Inside The World's Biggest Passenger Plane
-              </p>
-              <p class="video-author">
-                Tech Vision
-              </p>
-              <p class="video-stats">
-                3.7M views &#183; 10 months ago
-              </p>
-            </div>
-          </div>
-        </div>
+    # Cap the frame rate
+    pygame.time.Clock().tick(60)
 
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-9.webp">
-            <div class="video-time">13:17</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-9.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                The SECRET to Super Human STRENGTH
-              </p>
-              <p class="video-author">
-                ThenX
-              </p>
-              <p class="video-stats">
-                20M views &#183; 3 years ago
-              </p>
-            </div>
-          </div>
-        </div>
+# Quit Pygame
+pygame.quit()
 
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-10.webp">
-            <div class="video-time">7:53</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-10.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                How The World's Largest Cruise Ship Makes 30,000 Meals Every Day
-              </p>
-              <p class="video-author">
-                Business Insider
-              </p>
-              <p class="video-stats">
-                14M views &#183; 1 year ago
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-11.webp">
-            <div class="video-time">4:10</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-11.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                Dubai's Crazy Underwater Train and Other Things #Only in Dubai
-              </p>
-              <p class="video-author">
-                Destination Tips
-              </p>
-              <p class="video-stats">
-                3M views &#183; 1 year ago
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="video-preview">
-          <div class="thumbnail-row">
-            <img class="thumbnail" src="thumbnails/thumbnail-12.webp">
-            <div class="video-time">4:51</div>
-          </div>
-          <div class="video-info-grid">
-            <div class="channel-picture">
-              <img class="profile-picture" src="channel-pictures/channel-12.jpeg">
-            </div>
-            <div class="video-info">
-              <p class="video-title">
-                What would happen if you didn’t drink water? - Mia Nacamulli
-              </p>
-              <p class="video-author">
-                TED-Ed
-              </p>
-              <p class="video-stats">
-                12M views &#183; 5 years ago
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </body>
-</html>
+input()
